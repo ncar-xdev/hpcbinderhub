@@ -49,7 +49,7 @@ RUN . /opt/jupyterhub/etc/profile.d/conda.sh && \
 
 # TODO: Generate SSL Certificates
 
-# COPY jupyterhub_config.py /opt/jupyterhub/etc/
+COPY jupyterhub_config.py /opt/jupyterhub/etc/
 COPY run_jupyterhub /opt/jupyterhub/bin/
 # COPY sudospawner-singleuser /opt/jupyterhub/bin/
 

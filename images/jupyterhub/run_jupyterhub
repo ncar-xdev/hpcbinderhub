@@ -19,12 +19,12 @@ then
 fi
 cd ${vol}
 
-# echo ":: Checking for configuration file"
-# if [ ! -f "${cfg}" ]
-# then
-#     echo "Failed to find jupyterhub config file. Exiting." 1>&2
-#     exit 1
-# fi
+echo ":: Checking for configuration file"
+if [ ! -f "${cfg}" ]
+then
+    echo "Failed to find jupyterhub config file. Exiting." 1>&2
+    exit 1
+fi
 
 echo ":: Checking for 'jupyterhub' executable"
 if [ ! -e "${exe}" ]
@@ -33,5 +33,4 @@ then
     exit 1
 fi
 
-# ${exe} -f ${cfg}
-${exe}
+${exe} -f ${cfg}
