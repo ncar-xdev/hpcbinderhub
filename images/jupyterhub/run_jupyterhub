@@ -2,9 +2,14 @@
 
 vol="/opt/jupyterhub/var/jupyterhub"
 cfg="/opt/jupyterhub/etc/jupyterhub_config.py"
+exe="/opt/jupyterhub/bin/jupyterhub"
 
 echo ":: Sourcing 'conda' environment"
-conda activate /opt/jupyterhub
+if [ -f /opt/jupyterhub/etc/profile.d/conda.sh ]
+then
+    . /opt/jupyterhub/etc/profile.d/conda.sh
+    conda activate base
+fi
 
 echo ":: Checking for persistent volume"
 if [ ! -d "${vol}" ]
@@ -22,11 +27,11 @@ then
 fi
 
 echo ":: Checking for 'jupyterhub' executable"
-command -v jupyterhub > /dev/null 2>&1
-if [ ! $? == 0 ]
+if [ ! -e "${exe}" ]
 then
     echo "Failed to find jupyterhub executable. Exiting." 1>&2
     exit 1
 fi
 
-jupyterhub -f ${cfg}
+
+${exe} -f ${cfg}
