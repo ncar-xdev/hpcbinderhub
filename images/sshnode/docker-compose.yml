@@ -7,13 +7,13 @@ networks:
 
 services:
   node1:
-    image: sshd
+    image: sshnode
     container_name: node1
     hostname: node1
     networks:
       - network
   node2:
-    image: sshd
+    image: sshnode
     container_name: node2
     hostname: node2
     networks:
