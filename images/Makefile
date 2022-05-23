@@ -1,5 +1,4 @@
 DOCKER := docker
-IMGDIRS := $(subst /,,$(wildcard */))
 
 .PHONY: all prune
 
