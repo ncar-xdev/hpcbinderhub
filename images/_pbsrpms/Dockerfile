@@ -15,11 +15,11 @@ RUN cd /tmp && \
     cd openpbs-20.0.1 && \
     ./autogen.sh && \
     ./configure --prefix=/opt/pbs && \
-    make dist && \
+    make dist
+RUN cd /tmp/openpbs-20.0.1 && \
     mkdir /root/rpmbuild /root/rpmbuild/SOURCES /root/rpmbuild/SPECS && \
-    cp openpbs-*.tar.gz /root/rpmbuild/SOURCES && \
-    cp openpbs.spec /root/rpmbuild/SPECS && \
-    cp openpbs-rpmlintrc /root/rpmbuild/SOURCES && \
+    mv openpbs-*.tar.gz /root/rpmbuild/SOURCES/ && \
+    cp openpbs.spec /root/rpmbuild/SPECS/ && \
+    cp openpbs-rpmlintrc /root/rpmbuild/SOURCES/ && \
     cd /root/rpmbuild/SPECS && \
-    rpmbuild -ba openpbs.spec && \
-    rm -rf /tmp/*
+    rpmbuild -ba openpbs.spec
