@@ -1,8 +1,5 @@
-FROM centos:latest
-RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-* && \
-    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
-RUN dnf -y makecache && \
-    dnf -y install wget ncurses sudo which nano passwd openssh epel-release && \
+FROM base
+RUN dnf install -y wget ncurses sudo which nano passwd openssh epel-release && \
     dnf clean all
 RUN groupadd -g 500 jupyter && \
     groupadd -g 501 shadow && \
@@ -12,11 +9,6 @@ RUN groupadd -g 500 jupyter && \
     chgrp shadow /etc/shadow && \
     chmod 0440 /etc/shadow && \
     unlink /var/run/nologin
-RUN groupadd -g 990 jupyterhub && \
-    useradd -u 1001 -G jupyterhub alpha && \
-    echo "alpha:funkyduck" | chpasswd && \
-    useradd -u 1002 -G jupyterhub beta &&  \
-    echo "beta:funkybird" | chpasswd
 COPY jupyterhub.sudoers /etc/sudoers.d/jupyterhub
 COPY jupyterhub.pam /etc/pam.d/jupyterhub
 USER jupyter
