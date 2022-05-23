@@ -7,8 +7,7 @@ RUN groupadd -g 500 jupyter && \
     mkdir -p /opt/jupyterhub && \
     chown jupyter:jupyter /opt/jupyterhub && \
     chgrp shadow /etc/shadow && \
-    chmod 0440 /etc/shadow && \
-    unlink /var/run/nologin
+    chmod 0440 /etc/shadow
 COPY jupyterhub.sudoers /etc/sudoers.d/jupyterhub
 COPY jupyterhub.pam /etc/pam.d/jupyterhub
 USER jupyter
