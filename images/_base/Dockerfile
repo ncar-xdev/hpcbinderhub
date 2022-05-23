@@ -5,4 +5,5 @@ RUN groupadd -g 990 cluster && \
     useradd -u 1001 -G cluster alpha && \
     echo "alpha:funkya" | chpasswd && \
     useradd -u 1002 -G cluster beta &&  \
-    echo "beta:funkyb" | chpasswd
+    echo "beta:funkyb" | chpasswd && \
+    unlink /var/run/nologin
