@@ -7,6 +7,5 @@ RUN sed -ie "s/#PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config && 
     sed -ie "s/# Host */Host */g" /etc/ssh/ssh_config && \
     sed -ie "s/#   StrictHostKeyChecking ask/  StrictHostKeyChecking accept-new/g" /etc/ssh/ssh_config && \
     ssh-keygen -A
-EXPOSE 22/tcp
 COPY entrypoint.sh /root/entrypoint.sh
 ENTRYPOINT ["/bin/bash", "/root/entrypoint.sh"]
