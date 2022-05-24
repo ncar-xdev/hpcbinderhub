@@ -22,4 +22,5 @@ COPY jupyterhub_config.py /opt/jupyterhub/etc/
 COPY run_jupyterhub /opt/jupyterhub/bin/
 EXPOSE 8000/tcp
 EXPOSE 8081/tcp
-ENTRYPOINT ["/bin/bash", "/opt/jupyterhub/bin/run_jupyterhub"]
+COPY entrypoint.sh /root/entrypoint.sh
+ENTRYPOINT [ "/bin/bash", "/root/entrypoint.sh" ]
