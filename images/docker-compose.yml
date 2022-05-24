@@ -1,0 +1,64 @@
+networks:
+  network:
+    name: cluster-net
+    driver: bridge
+
+volumes:
+  alpha-home:
+  beta-home:
+
+services:
+  jupyterhub:
+    image: jupyterhub
+    container_name: jupyterhub
+    hostname: jupyterhub
+    networks:
+      - network
+    environment:
+      - PBS_SERVER=pbsserver
+    ports:
+      - 8000:8000
+      - 8081:8081
+  pbsserver:
+    image: pbsserver
+    container_name: pbsserver
+    hostname: pbsserver
+    depends_on:
+      - node1
+      - node2
+    networks:
+      - network
+    command: ["node1", "node2"]
+  head:
+    image: head
+    container_name: head
+    hostname: head
+    networks:
+      - network
+    environment:
+      - PBS_SERVER=pbsserver
+    volumes:
+      - alpha-home:/home/alpha
+      - beta-home:/home/beta
+  node1:
+    image: pbsmom
+    container_name: node1
+    hostname: node1
+    networks:
+      - network
+    environment:
+      - PBS_SERVER=pbsserver
+    volumes:
+      - alpha-home:/home/alpha
+      - beta-home:/home/beta
+  node2:
+    image: pbsmom
+    container_name: node2
+    hostname: node2
+    networks:
+      - network
+    environment:
+      - PBS_SERVER=pbsserver
+    volumes:
+      - alpha-home:/home/alpha
+      - beta-home:/home/beta
