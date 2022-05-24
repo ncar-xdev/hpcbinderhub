@@ -1,0 +1,18 @@
+networks:
+  network:
+    name: login-net
+    driver: bridge
+
+services:
+  node1:
+    image: login
+    container_name: node1
+    hostname: node1
+    networks:
+      - network
+  node2:
+    image: login
+    container_name: node2
+    hostname: node2
+    networks:
+      - network
