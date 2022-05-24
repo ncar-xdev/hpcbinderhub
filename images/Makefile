@@ -5,15 +5,15 @@ DOCKER := docker
 %: %/Dockerfile
 	${DOCKER} build --tag $(subst _,,$@) $@/
 
-all: jupyterhub login pbsmom pbsserver
+all: base head jupyterhub pbsmom pbsserver
 
-jupyterhub: _base
+jupyterhub: base
 
-login: _base
+head: base
 
-pbsmon: _base
+pbsmon: base
 
-pbsserver: _base
+pbsserver: base
 
 prune:
 	${DOCKER} image prune
