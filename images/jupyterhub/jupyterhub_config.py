@@ -1,4 +1,5 @@
 # Configuration file for jupyterhub.
+# flake8: noqa
 
 # ------------------------------------------------------------------------------
 # Application(SingletonConfigurable) configuration
@@ -66,13 +67,9 @@
 #  Default: False
 # c.JupyterHub.admin_access = False
 
-# DEPRECATED since version 0.7.2, use Authenticator.admin_users instead.
-#  Default: set()
-# c.JupyterHub.admin_users = set()
-
 # Allow named single-user servers per user
 #  Default: False
-# c.JupyterHub.allow_named_servers = False
+c.JupyterHub.allow_named_servers = True
 
 # Answer yes to any questions (e.g. confirm overwrite)
 #  Default: False
@@ -191,10 +188,6 @@
 #  Default: 'jupyterhub_config.py'
 # c.JupyterHub.config_file = 'jupyterhub_config.py'
 
-# DEPRECATED: does nothing
-#  Default: False
-# c.JupyterHub.confirm_no_ssl = False
-
 # Number of days for a login cookie to be valid.
 #          Default is two weeks.
 #  Default: 14
@@ -213,8 +206,7 @@
 # c.JupyterHub.cookie_secret_file = 'jupyterhub_cookie_secret'
 
 # The location of jupyterhub data files (e.g. /usr/local/share/jupyterhub)
-#  Default: '/Users/kpaul/Software/miniconda3/envs/jhub/share/jupyterhub'
-# c.JupyterHub.data_files_path = '/Users/kpaul/Software/miniconda3/envs/jhub/share/jupyterhub'
+c.JupyterHub.data_files_path = "/opt/jupyterhub/share"
 
 # Include any kwargs to pass to the database connection.
 #          See sqlalchemy.create_engine for details.
@@ -228,10 +220,6 @@
 # log all database transactions. This has A LOT of output
 #  Default: False
 # c.JupyterHub.debug_db = False
-
-# DEPRECATED since version 0.8: Use ConfigurableHTTPProxy.debug
-#  Default: False
-# c.JupyterHub.debug_proxy = False
 
 # If named servers are enabled, default name of server to spawn or open, e.g. by
 #  user-redirect.
@@ -284,12 +272,6 @@
 #  Default: []
 # c.JupyterHub.extra_handlers = []
 
-# DEPRECATED: use output redirection instead, e.g.
-#
-#  jupyterhub &>> /var/log/jupyterhub.log
-#  Default: ''
-# c.JupyterHub.extra_log_file = ''
-
 # Extra log handlers to set on JupyterHub logger
 #  Default: []
 # c.JupyterHub.extra_log_handlers = []
@@ -338,17 +320,6 @@
 #          .. versionadded:: 0.8
 #  Default: ''
 # c.JupyterHub.hub_connect_ip = ''
-
-# DEPRECATED
-#
-#  Use hub_connect_url
-#
-#  .. versionadded:: 0.8
-#
-#  .. deprecated:: 0.9
-#      Use hub_connect_url
-#  Default: 0
-# c.JupyterHub.hub_connect_port = 0
 
 # The URL for connecting to the Hub. Spawners, services, and the proxy will use
 #  this URL to talk to the Hub.
@@ -573,22 +544,6 @@
 #  Default: 8000
 # c.JupyterHub.port = 8000
 
-# DEPRECATED since version 0.8 : Use ConfigurableHTTPProxy.api_url
-#  Default: ''
-# c.JupyterHub.proxy_api_ip = ''
-
-# DEPRECATED since version 0.8 : Use ConfigurableHTTPProxy.api_url
-#  Default: 0
-# c.JupyterHub.proxy_api_port = 0
-
-# DEPRECATED since version 0.8: Use ConfigurableHTTPProxy.auth_token
-#  Default: ''
-# c.JupyterHub.proxy_auth_token = ''
-
-# DEPRECATED since version 0.8: Use ConfigurableHTTPProxy.check_running_interval
-#  Default: 5
-# c.JupyterHub.proxy_check_interval = 5
-
 # The class to use for configuring the JupyterHub proxy.
 #
 #          Should be a subclass of :class:`jupyterhub.proxy.Proxy`.
@@ -602,10 +557,6 @@
 #    - default: jupyterhub.proxy.ConfigurableHTTPProxy
 #  Default: 'jupyterhub.proxy.ConfigurableHTTPProxy'
 # c.JupyterHub.proxy_class = 'jupyterhub.proxy.ConfigurableHTTPProxy'
-
-# DEPRECATED since version 0.8. Use ConfigurableHTTPProxy.command
-#  Default: []
-# c.JupyterHub.proxy_cmd = []
 
 # Recreate all certificates used within JupyterHub on restart.
 #
