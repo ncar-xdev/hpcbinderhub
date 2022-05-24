@@ -1,6 +1,6 @@
 DOCKER := docker
 
-.PHONY: all prune
+.PHONY: all clean
 
 %: %/Dockerfile
 	${DOCKER} build --tag $(subst _,,$@) $@/
@@ -15,5 +15,5 @@ pbsmon: base
 
 pbsserver: base
 
-prune:
-	${DOCKER} image prune
+clean:
+	${DOCKER} image prune --force
