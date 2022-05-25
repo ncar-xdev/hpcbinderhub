@@ -1,17 +1,17 @@
 networks:
   network:
-    name: login-net
+    name: ssh-net
     driver: bridge
 
 services:
   node1:
-    image: login
+    image: head
     container_name: node1
     hostname: node1
     networks:
       - network
   node2:
-    image: login
+    image: head
     container_name: node2
     hostname: node2
     networks:

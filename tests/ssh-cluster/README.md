@@ -57,7 +57,7 @@ From within this directory, run the following:
 ```
 
 and it will stand up two nodes, `node1` and `node2`, connected via a
-network called `login-net`, just like in the manual example above.
+network called `ssh-net`, just like in the manual example above.
 
 ### Docker-Compose Teardown
 
