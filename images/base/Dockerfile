@@ -38,9 +38,14 @@ FROM centos:8.4.2105
 RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-* && \
     sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
 COPY --from=pbsrpms /root/rpmbuild/RPMS/x86_64 /root/rpmbuild/RPMS/x86_64
-COPY --from=conda /opt/conda /opt/conda
 RUN dnf install -y nano openssh-clients python3 /root/rpmbuild/RPMS/x86_64/openpbs-client-20.0.1-0.x86_64.rpm
 COPY pbs.conf /etc/pbs.conf
+RUN ln -s /usr/bin/python3.6 /usr/bin/python && \
+    ln -s /usr/bin/pip3.6 /usr/bin/pip && \
+    ln -s /usr/bin/pydoc3.6 /usr/bin/pydoc && \
+    ln -s /usr/bin/pyvenv-3.6 /usr/bin/pyvenv
+COPY --from=conda /opt/conda /opt/conda
+RUN cp /opt/conda/etc/profile.d/conda.sh /etc/profile.d/
 RUN groupadd -g 990 cluster && \
     useradd -u 1001 -G cluster alpha && \
     echo "alpha:alpha" | chpasswd && \
