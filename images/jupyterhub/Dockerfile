@@ -1,11 +1,14 @@
 FROM base
 RUN dnf install -y git && \
     dnf clean all
+COPY environment.yml /tmp/
 RUN . /opt/conda/etc/profile.d/conda.sh && \
     conda activate base && \
-    conda install -y -c conda-forge jupyterhub && \
-    pip install batchspawner sudospawner wrapspawner git+https://github.com/NERSC/sshspawner && \
-    conda clean --all && \
+    conda install -y -c conda-forge mamba && \
+    conda clean -y --all && \
+    mamba env update --file=/tmp/environment.yml && \
+    mamba clean -y --all && \
+    rm -rf /tmp/ && \
     mkdir -p /opt/conda/var/jupyterhub
 COPY jupyterhub_config.py /opt/conda/etc/
 COPY run_jupyterhub /opt/conda/bin/

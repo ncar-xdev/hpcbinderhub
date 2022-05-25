@@ -1,0 +1,15 @@
+name: base
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - jupyterhub
+  - jupyterlab
+  - dask_labextension
+  - nb_conda_kernels
+  - pip
+  - pip:
+      - batchspawner
+      - sudospawner
+      - wrapspawner
+      - git+https://github.com/NERSC/sshspawner
