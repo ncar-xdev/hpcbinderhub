@@ -1,4 +1,4 @@
-FROM centos:8.4.2105 as rpms
+FROM centos:8.4.2105 as pbsrpms
 RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-* && \
     sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
 RUN dnf install -y dnf-plugins-core && \
@@ -24,17 +24,32 @@ RUN cd /tmp/openpbs-20.0.1 && \
     cd /root/rpmbuild/SPECS && \
     rpmbuild -ba openpbs.spec
 
+FROM centos:8.4.2105 as conda
+RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-* && \
+    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
+RUN dnf install -y wget
+RUN wget -qO /tmp/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    bash /tmp/miniconda.sh -b -u -p /opt/conda && \
+    cp /opt/conda/etc/profile.d/conda.sh /etc/profile.d/ && \
+    . /opt/conda/etc/profile.d/conda.sh && \
+    conda clean --all
+
 FROM centos:8.4.2105
 RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-* && \
     sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
-COPY --from=rpms /root/rpmbuild/RPMS/x86_64 /root/rpmbuild/RPMS/x86_64
+COPY --from=pbsrpms /root/rpmbuild/RPMS/x86_64 /root/rpmbuild/RPMS/x86_64
+COPY --from=conda /opt/conda /opt/conda
 RUN dnf install -y nano openssh-clients python3 /root/rpmbuild/RPMS/x86_64/openpbs-client-20.0.1-0.x86_64.rpm
 COPY pbs.conf /etc/pbs.conf
 RUN groupadd -g 990 cluster && \
     useradd -u 1001 -G cluster alpha && \
-    echo "alpha:funkya" | chpasswd && \
+    echo "alpha:alpha" | chpasswd && \
     useradd -u 1002 -G cluster beta &&  \
-    echo "beta:funkyb" | chpasswd && \
+    echo "beta:beta" | chpasswd && \
+    useradd -u 1003 -G cluster gamma && \
+    echo "gamma:gamma" | chpasswd && \
+    useradd -u 1004 -G cluster delta &&  \
+    echo "delta:delta" | chpasswd && \
     unlink /var/run/nologin
 COPY entrypoint.sh /etc/entrypoint.sh
 ENTRYPOINT [ "/bin/bash", "/etc/entrypoint.sh" ]
