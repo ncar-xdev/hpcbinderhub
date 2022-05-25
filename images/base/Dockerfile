@@ -10,7 +10,7 @@ RUN dnf install -y dnf-plugins-core && \
         autoconf automake gcc-c++ wget && \
     dnf clean all
 RUN cd /tmp && \
-    wget -O openpbs-20.0.1.tar.gz https://github.com/openpbs/openpbs/archive/refs/tags/v20.0.1.tar.gz && \
+    wget -qO openpbs-20.0.1.tar.gz https://github.com/openpbs/openpbs/archive/refs/tags/v20.0.1.tar.gz && \
     tar -xpvf openpbs-20.0.1.tar.gz && \
     cd openpbs-20.0.1 && \
     ./autogen.sh && \
