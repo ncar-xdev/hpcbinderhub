@@ -46,14 +46,15 @@ RUN ln -s /usr/bin/python3.6 /usr/bin/python && \
     ln -s /usr/bin/pip3.6 /usr/bin/pip && \
     ln -s /usr/bin/pydoc3.6 /usr/bin/pydoc && \
     ln -s /usr/bin/pyvenv-3.6 /usr/bin/pyvenv
-COPY --from=conda /opt/conda /opt/conda
 RUN groupadd -g 500 jupyter && \
     groupadd -g 501 shadow && \
     useradd -g 500 -u 500 -G shadow -m jupyter && \
-    chown jupyter:jupyter /opt/conda && \
     chgrp shadow /etc/shadow && \
     chmod 0440 /etc/shadow && \
     unlink /var/run/nologin
+RUN mkdir /home/jupyter/.ssh && \
+    ssh-keygen -q -t rsa -N '' -f /home/jupyter/.ssh/id_rsa && \
+    chown jupyter:jupyter /home/jupyter/.ssh
 RUN groupadd -g 990 jupyterhub && \
     useradd -u 1001 -G jupyterhub alpha && \
     echo "alpha:alpha" | chpasswd && \
@@ -63,6 +64,7 @@ RUN groupadd -g 990 jupyterhub && \
     echo "gamma:gamma" | chpasswd && \
     useradd -u 1004 -G jupyterhub delta &&  \
     echo "delta:delta" | chpasswd
+COPY --from=conda --chown=jupyter:jupyter /opt/conda /opt/conda
 RUN cat /opt/conda/etc/profile.d/conda.sh >> /home/jupyter/.bashrc
 COPY entrypoint.sh /etc/entrypoint.sh
 ENTRYPOINT [ "/bin/bash", "/etc/entrypoint.sh" ]
