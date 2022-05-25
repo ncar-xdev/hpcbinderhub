@@ -1,0 +1,8 @@
+services:
+  jupyterhub:
+    image: jupyterhub
+    container_name: jupyterhub
+    hostname: jupyterhub
+    ports:
+      - 8000:8000
+      - 8081:8081
