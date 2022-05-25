@@ -15,7 +15,7 @@ RUN sed -ie "s/#PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config && 
     ssh-keygen -A
 RUN . /opt/conda/etc/profile.d/conda.sh && \
     conda activate base && \
-    conda install jupyterlab dask-labextension nb_conda_kernels && \
+    conda install -y -c conda-forge jupyterlab dask-labextension nb_conda_kernels && \
     conda clean --all
 COPY --from=getter /root/get_port.py /opt/conda/bin/get_port.py
 COPY sshspawner-singleuser /opt/conda/bin/sshspawner-singleuser
