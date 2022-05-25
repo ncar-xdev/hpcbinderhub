@@ -37,25 +37,34 @@ RUN wget -qO /tmp/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-la
 FROM centos:8.4.2105
 RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-* && \
     sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
+COPY --from=conda /opt/conda /opt/conda
 COPY --from=pbsrpms /root/rpmbuild/RPMS/x86_64 /root/rpmbuild/RPMS/x86_64
-RUN dnf install -y nano openssh-clients python3 /root/rpmbuild/RPMS/x86_64/openpbs-client-20.0.1-0.x86_64.rpm && \
+RUN dnf install -y sudo passwd nano openssh-clients python3 \
+        /root/rpmbuild/RPMS/x86_64/openpbs-client-20.0.1-0.x86_64.rpm && \
     dnf clean all
 COPY pbs.conf /etc/pbs.conf
 RUN ln -s /usr/bin/python3.6 /usr/bin/python && \
     ln -s /usr/bin/pip3.6 /usr/bin/pip && \
     ln -s /usr/bin/pydoc3.6 /usr/bin/pydoc && \
     ln -s /usr/bin/pyvenv-3.6 /usr/bin/pyvenv
-COPY --from=conda /opt/conda /opt/conda
-RUN cp /opt/conda/etc/profile.d/conda.sh /etc/profile.d/
-RUN groupadd -g 990 cluster && \
-    useradd -u 1001 -G cluster alpha && \
+RUN groupadd -g 500 jupyter && \
+    groupadd -g 501 shadow && \
+    useradd -g 500 -u 500 -G shadow -m jupyter && \
+    mkdir -p /opt/conda && \
+    chown jupyter:jupyter /opt/conda && \
+    chgrp shadow /etc/shadow && \
+    chmod 0440 /etc/shadow && \
+    unlink /var/run/nologin
+RUN groupadd -g 990 jupyterhub && \
+    useradd -u 1001 -G jupyterhub alpha && \
     echo "alpha:alpha" | chpasswd && \
-    useradd -u 1002 -G cluster beta &&  \
+    useradd -u 1002 -G jupyterhub beta &&  \
     echo "beta:beta" | chpasswd && \
-    useradd -u 1003 -G cluster gamma && \
+    useradd -u 1003 -G jupyterhub gamma && \
     echo "gamma:gamma" | chpasswd && \
-    useradd -u 1004 -G cluster delta &&  \
+    useradd -u 1004 -G jupyterhub delta &&  \
     echo "delta:delta" | chpasswd && \
     unlink /var/run/nologin
+RUN cat /opt/conda/etc/profile.d/conda.sh >> /home/jupyter/.bashrc
 COPY entrypoint.sh /etc/entrypoint.sh
 ENTRYPOINT [ "/bin/bash", "/etc/entrypoint.sh" ]
