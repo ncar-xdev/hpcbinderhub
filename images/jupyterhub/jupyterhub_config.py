@@ -14,9 +14,9 @@ c.SSHSpawner.remote_hosts = ["head"]
 c.SSHSpawner.remote_port = "22"
 c.SSHSpawner.ssh_command = "ssh"
 c.SSHSpawner.path = (
-    "/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/pbs/bin:/opt/jupyterhub/bin"
+    "/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/pbs/bin:/opt/conda/bin"
 )
-c.SSHSpawner.remote_port_command = "/usr/bin/python3 /opt/jupyterhub/bin/get_port.py"
+c.SSHSpawner.remote_port_command = "/usr/bin/python3 /opt/conda/bin/get_port.py"
 
 c.BatchSpawnerBase.req_runtime = "01:00:00"
 c.BatchSpawnerBase.req_nprocs = "2"
