@@ -37,7 +37,6 @@ RUN wget -qO /tmp/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-la
 FROM centos:8.4.2105
 RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-* && \
     sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
-COPY --from=conda /opt/conda /opt/conda
 COPY --from=pbsrpms /root/rpmbuild/RPMS/x86_64 /root/rpmbuild/RPMS/x86_64
 RUN dnf install -y sudo passwd nano openssh-clients python3 \
         /root/rpmbuild/RPMS/x86_64/openpbs-client-20.0.1-0.x86_64.rpm && \
@@ -47,10 +46,10 @@ RUN ln -s /usr/bin/python3.6 /usr/bin/python && \
     ln -s /usr/bin/pip3.6 /usr/bin/pip && \
     ln -s /usr/bin/pydoc3.6 /usr/bin/pydoc && \
     ln -s /usr/bin/pyvenv-3.6 /usr/bin/pyvenv
+COPY --from=conda /opt/conda /opt/conda
 RUN groupadd -g 500 jupyter && \
     groupadd -g 501 shadow && \
     useradd -g 500 -u 500 -G shadow -m jupyter && \
-    mkdir -p /opt/conda && \
     chown jupyter:jupyter /opt/conda && \
     chgrp shadow /etc/shadow && \
     chmod 0440 /etc/shadow && \
