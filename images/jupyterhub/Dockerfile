@@ -5,10 +5,9 @@ COPY environment.yml /tmp/
 RUN . /opt/conda/etc/profile.d/conda.sh && \
     conda activate base && \
     conda install -y -c conda-forge mamba && \
-    conda clean -y --all && \
     mamba env update --file=/tmp/environment.yml && \
     mamba clean -y --all && \
-    rm -rf /tmp/ && \
+    rm -rf /tmp/* && \
     mkdir -p /opt/conda/var/jupyterhub
 COPY jupyterhub_config.py /opt/conda/etc/
 COPY run_jupyterhub /opt/conda/bin/
