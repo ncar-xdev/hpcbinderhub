@@ -62,8 +62,7 @@ RUN groupadd -g 990 jupyterhub && \
     useradd -u 1003 -G jupyterhub gamma && \
     echo "gamma:gamma" | chpasswd && \
     useradd -u 1004 -G jupyterhub delta &&  \
-    echo "delta:delta" | chpasswd && \
-    unlink /var/run/nologin
+    echo "delta:delta" | chpasswd
 RUN cat /opt/conda/etc/profile.d/conda.sh >> /home/jupyter/.bashrc
 COPY entrypoint.sh /etc/entrypoint.sh
 ENTRYPOINT [ "/bin/bash", "/etc/entrypoint.sh" ]
