@@ -1,13 +1,13 @@
 #!/bin/bash
 
-vol="/opt/jupyterhub/var/jupyterhub"
-cfg="/opt/jupyterhub/etc/jupyterhub_config.py"
-exe="/opt/jupyterhub/bin/jupyterhub"
+vol="/opt/conda/var/jupyterhub"
+cfg="/opt/conda/etc/jupyterhub_config.py"
+exe="/opt/conda/bin/jupyterhub"
 
 echo ":: Sourcing 'conda' environment"
-if [ -f /opt/jupyterhub/etc/profile.d/conda.sh ]
+if [ -f /opt/conda/etc/profile.d/conda.sh ]
 then
-    . /opt/jupyterhub/etc/profile.d/conda.sh
+    . /opt/conda/etc/profile.d/conda.sh
     conda activate base
 fi
 
@@ -32,6 +32,5 @@ then
     echo "Failed to find jupyterhub executable. Exiting." 1>&2
     exit 1
 fi
-
 
 ${exe} -f ${cfg}

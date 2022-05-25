@@ -1,26 +1,14 @@
 FROM base
-RUN dnf install -y wget ncurses sudo which nano passwd openssh epel-release && \
+RUN dnf install -y git && \
     dnf clean all
-RUN groupadd -g 500 jupyter && \
-    groupadd -g 501 shadow && \
-    useradd -g 500 -u 500 -G shadow -m jupyter && \
-    mkdir -p /opt/jupyterhub && \
-    chown jupyter:jupyter /opt/jupyterhub && \
-    chgrp shadow /etc/shadow && \
-    chmod 0440 /etc/shadow
-COPY jupyterhub.sudoers /etc/sudoers.d/jupyterhub
-COPY jupyterhub.pam /etc/pam.d/jupyterhub
-USER jupyter
-RUN wget -O /tmp/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    bash /tmp/miniconda.sh -b -u -p /opt/jupyterhub && \
-    mkdir -p /opt/jupyterhub/var/jupyterhub
-RUN . /opt/jupyterhub/etc/profile.d/conda.sh && \
+RUN . /opt/conda/etc/profile.d/conda.sh && \
     conda activate base && \
     conda install -y -c conda-forge jupyterhub && \
-    conda clean --all
-COPY jupyterhub_config.py /opt/jupyterhub/etc/
-COPY run_jupyterhub /opt/jupyterhub/bin/
+    pip install batchspawner sudospawner wrapspawner git+https://github.com/NERSC/sshspawner && \
+    conda clean --all && \
+    mkdir -p /opt/conda/var/jupyterhub
+COPY jupyterhub_config.py /opt/conda/etc/
+COPY run_jupyterhub /opt/conda/bin/
 EXPOSE 8000/tcp
 EXPOSE 8081/tcp
-COPY entrypoint.sh /home/jupyter/entrypoint.sh
-ENTRYPOINT [ "/bin/bash", "/home/jupyter/entrypoint.sh" ]
+CMD [ "/bin/bash", "/opt/conda/bin/run_jupyterhub" ]
