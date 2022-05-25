@@ -27,6 +27,12 @@ c.TorqueSpawner.batch_script = """#!/bin/sh
 """
 
 c.ProfilesSpawner.profiles = [
+    (
+        "Launch Locally",
+        "local",
+        "jupyterhub.spawner.LocalProcessSpawner",
+        {"ip": "0.0.0.0"},
+    ),
     ("Launch on HEAD Node", "head", "sshspawner.sshspawner.SSHSpawner", dict()),
     ("Launch in PBS Queue", "pbs", "batchspawner.TorqueSpawner", dict()),
 ]
