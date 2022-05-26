@@ -14,7 +14,7 @@ RUN sed -ie "s/#PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config && 
     sed -ie "s/#   StrictHostKeyChecking ask/  StrictHostKeyChecking accept-new/g" /etc/ssh/ssh_config && \
     ssh-keygen -A
 USER jupyter
-COPY environment.yml /tmp/
+COPY --chown=jupyter:jupyter environment.yml /tmp/
 RUN . /opt/conda/etc/profile.d/conda.sh && \
     conda activate base && \
     conda install -y -c conda-forge mamba && \

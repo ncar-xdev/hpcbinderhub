@@ -4,7 +4,7 @@ RUN dnf install -y git && \
 COPY jupyterhub.sudoers /etc/sudoers.d/jupyterhub
 COPY jupyterhub.pam /etc/pam.d/jupyterhub
 USER jupyter
-COPY environment.yml /tmp/
+COPY --chown=jupyter:jupyter environment.yml /tmp/
 RUN . /opt/conda/etc/profile.d/conda.sh && \
     conda activate base && \
     conda install -y -c conda-forge mamba && \
