@@ -23,4 +23,5 @@ RUN . /opt/conda/etc/profile.d/conda.sh && \
     rm -rf /tmp/environment.yml
 COPY --from=getter /root/get_port.py /opt/conda/bin/get_port.py
 COPY sshspawner-singleuser /opt/conda/bin/sshspawner-singleuser
+USER root
 CMD [ "/usr/sbin/sshd",  "-D" ]
