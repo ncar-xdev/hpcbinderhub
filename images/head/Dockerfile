@@ -13,13 +13,14 @@ RUN sed -ie "s/#PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config && 
     sed -ie "s/# Host */Host */g" /etc/ssh/ssh_config && \
     sed -ie "s/#   StrictHostKeyChecking ask/  StrictHostKeyChecking accept-new/g" /etc/ssh/ssh_config && \
     ssh-keygen -A
+USER jupyter
 COPY environment.yml /tmp/
 RUN . /opt/conda/etc/profile.d/conda.sh && \
     conda activate base && \
     conda install -y -c conda-forge mamba && \
     mamba env update --file=/tmp/environment.yml && \
     mamba clean -y --all && \
-    rm -rf /tmp/*
+    rm -rf /tmp/environment.yml
 COPY --from=getter /root/get_port.py /opt/conda/bin/get_port.py
 COPY sshspawner-singleuser /opt/conda/bin/sshspawner-singleuser
 CMD [ "/usr/sbin/sshd",  "-D" ]
