@@ -1,3 +1,5 @@
 Cmnd_Alias JUPYTER_CMD = /opt/conda/bin/sudospawner
+Cmnd_Alias QSUB_CMD = /opt/pbs/bin/qsub
 %jupyterhub ALL=(jupyter) /usr/bin/sudo
 jupyter ALL=(%jupyterhub) NOPASSWD:JUPYTER_CMD
+jupyter ALL=(%jupyterhub) NOPASSWD:SETENV:QSUB_CMD
