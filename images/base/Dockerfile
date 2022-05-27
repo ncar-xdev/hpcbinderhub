@@ -74,3 +74,5 @@ RUN mkdir ~/.ssh && \
     ssh-keygen -s ~/.ssh/id_rsa -I jupyter -n jupyter ~/.ssh/id_rsa.pub && \
     cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
 USER root
+COPY entrypoint.sh /etc/entrypoint.sh
+ENTRYPOINT [ "/bin/bash", "/etc/entrypoint.sh" ]
