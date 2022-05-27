@@ -30,7 +30,7 @@ services:
     volumes:
       - alpha-home:/home/alpha
       - beta-home:/home/beta
-      - gamma-home:/home/beta
+      - gamma-home:/home/gamma
   node1:
     image: pbsmom
     container_name: node1
@@ -41,8 +41,8 @@ services:
       - PBS_SERVER=pbsserver
     volumes:
       - alpha-home:/home/alpha
-      - gamma-home:/home/beta
       - beta-home:/home/beta
+      - gamma-home:/home/gamma
   node2:
     image: pbsmom
     container_name: node2
@@ -54,4 +54,4 @@ services:
     volumes:
       - alpha-home:/home/alpha
       - beta-home:/home/beta
-      - gamma-home:/home/beta
+      - gamma-home:/home/gamma
