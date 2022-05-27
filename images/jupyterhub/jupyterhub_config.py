@@ -2,6 +2,7 @@
 # flake8: noqa
 import batchspawner
 import sshspawner
+import sudospawner
 import wrapspawner
 
 c.JupyterHub.allow_named_servers = True
@@ -19,15 +20,20 @@ c.ProfilesSpawner.profiles = [
     ("Launch in PBS Queue", "pbs", "batchspawner.TorqueSpawner", {}),
 ]
 
-
+# --------------------------------
+# SSHSpawner
+# --------------------------------
 c.SSHSpawner.remote_hosts = ["head"]
 c.SSHSpawner.remote_port_command = "/opt/conda/bin/python /opt/conda/bin/get_port.py"
 c.SSHSpawner.path = (
     "/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/pbs/bin:/opt/conda/bin"
 )
 
+# --------------------------------
+# BatchSpawner
+# --------------------------------
 c.BatchSpawnerBase.req_runtime = "01:00:00"
-c.BatchSpawnerBase.req_nprocs = "2"
+c.BatchSpawnerBase.req_nprocs = "1"
 
 # c.TorqueSpawner.batch_submit_cmd = "/opt/pbs/bin/qsub"
 # c.TorqueSpawner.batch_query_cmd = "/opt/pbs/bin/qstat -x {job_id}"
