@@ -11,6 +11,7 @@ RUN . /opt/conda/etc/profile.d/conda.sh && \
     mkdir -p /opt/conda/var/jupyterhub
 COPY --chown=jupyter:jupyter jupyterhub_config.py /opt/conda/etc/
 COPY --chown=jupyter:jupyter run_jupyterhub /opt/conda/bin/
+USER root
 EXPOSE 8000/tcp
 EXPOSE 8081/tcp
-CMD [ "/bin/bash", "/opt/conda/bin/run_jupyterhub" ]
+CMD [ "sudo", "-u", "jupyter", "/bin/bash", "/opt/conda/bin/run_jupyterhub" ]
