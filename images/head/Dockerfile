@@ -7,21 +7,13 @@ RUN wget -qO /root/get_port.py https://raw.githubusercontent.com/NERSC/sshspawne
 FROM base
 RUN dnf install -y openssh-server && \
     dnf clean all
-RUN sed -ie "s/#PermitRootLogin.*/PermitRootLogin no/g" /etc/ssh/sshd_config && \
-    sed -ie "s/#PasswordAuthentication/PasswordAuthentication/g" /etc/ssh/sshd_config && \
-    sed -ie 's/#Port 22/Port 22/g' /etc/ssh/sshd_config && \
-    sed -ie "s/# Host */Host */g" /etc/ssh/ssh_config && \
-    sed -ie "s/#   StrictHostKeyChecking ask/  StrictHostKeyChecking accept-new/g" /etc/ssh/ssh_config && \
-    ssh-keygen -A
-USER jupyter
-COPY --chown=jupyter:jupyter environment.yml /tmp/
 RUN . /opt/conda/etc/profile.d/conda.sh && \
     conda activate base && \
-    conda install -y -c conda-forge mamba && \
-    mamba env update --file=/tmp/environment.yml && \
-    mamba clean -y --all && \
-    rm -rf /tmp/environment.yml
+    conda install -y -c conda-forge jupyterlab dask_labextension nb_conda_kernels && \
+    conda clean -y --all
+RUN sed -ie "s/#PermitRootLogin.*/PermitRootLogin prohibit-password/g" /etc/ssh/sshd_config && \
+    sed -ie "s/#PasswordAuthentication yes/PasswordAuthentication yes/g" /etc/ssh/sshd_config && \
+    sed -ie 's/#   Port 22/  Port 22/g' /etc/ssh/sshd_config
 COPY --from=getter /root/get_port.py /opt/conda/bin/get_port.py
 COPY sshspawner-singleuser /opt/conda/bin/sshspawner-singleuser
-USER root
 CMD [ "/usr/sbin/sshd",  "-D" ]
