@@ -38,7 +38,7 @@ FROM centos:8.4.2105
 RUN sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-Linux-* && \
     sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
 COPY --from=pbsrpms /root/rpmbuild/RPMS/x86_64 /root/rpmbuild/RPMS/x86_64
-RUN dnf install -y nano openssh-clients python3 \
+RUN dnf install -y nano sudo openssh-clients python3 \
         /root/rpmbuild/RPMS/x86_64/openpbs-client-20.0.1-0.x86_64.rpm && \
     dnf clean all && \
     rm -rf /tmp/*
@@ -56,8 +56,15 @@ RUN groupadd -g 990 jupyterhub && \
     echo "gamma:gamma" | chpasswd && \
     unlink /var/run/nologin
 COPY --from=conda /opt/conda /opt/conda
+RUN sed -ie "s|# Host *|Host *|g" /etc/ssh/ssh_config && \
+    sed -ie "s|#   StrictHostKeyChecking ask|  StrictHostKeyChecking accept-new|g" /etc/ssh/ssh_config && \
+    sed -ie "s|#   IdentityFile ~/.ssh/id_rsa|  IdentityFile ~/.ssh/id_rsa|g" /etc/ssh/ssh_config
 RUN mkdir /root/.ssh && \
-    ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa
+    ssh-keygen -A && \
+    ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa && \
+    ssh-keygen -s /root/.ssh/id_rsa -I root -n root /root/.ssh/id_rsa.pub && \
+    cat /root/.ssh/id_rsa.pub > /root/.ssh/authorized_keys
+RUN sed -ie "s|Defaults    secure_path =|#Defaults    secure_path =|g" /etc/sudoers
 RUN cp /opt/conda/etc/profile.d/conda.sh /etc/profile.d/
 COPY entrypoint.sh /etc/entrypoint.sh
 ENTRYPOINT [ "/bin/bash", "/etc/entrypoint.sh" ]
