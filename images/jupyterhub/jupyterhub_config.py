@@ -19,6 +19,9 @@ c.SSHSpawner.path = (
 c.BatchSpawnerBase.req_runtime = "01:00:00"
 c.BatchSpawnerBase.req_nprocs = "2"
 
+# c.TorqueSpawner.batch_submit_cmd = "/opt/pbs/bin/qsub"
+# c.TorqueSpawner.batch_query_cmd = "/opt/pbs/bin/qstat -x {job_id}"
+# c.TorqueSpawner.batch_cancel_cmd = "/opt/pbs/bin/qdel {job_id}"
 c.TorqueSpawner.batch_script = """#!/bin/sh
 #PBS -l walltime={runtime}
 #PBS -l nodes=1
