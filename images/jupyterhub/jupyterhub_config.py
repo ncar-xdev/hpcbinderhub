@@ -10,6 +10,16 @@ c.JupyterHub.spawner_class = "wrapspawner.ProfilesSpawner"
 
 c.Spawner.notebook_dir = "~/"
 
+# --------------------------------
+# WrapSpawner Profiles/Options
+# --------------------------------
+c.ProfilesSpawner.profiles = [
+    ("Launch Locally", "local", "sudospawner.SudoSpawner", {}),
+    ("Launch on HEAD Node", "head", "sshspawner.sshspawner.SSHSpawner", {}),
+    ("Launch in PBS Queue", "pbs", "batchspawner.TorqueSpawner", {}),
+]
+
+
 c.SSHSpawner.remote_hosts = ["head"]
 c.SSHSpawner.remote_port_command = "/opt/conda/bin/python /opt/conda/bin/get_port.py"
 c.SSHSpawner.path = (
@@ -28,14 +38,3 @@ c.TorqueSpawner.batch_script = """#!/bin/sh
 #PBS -N jupyter-singleuser
 {cmd}
 """
-
-c.ProfilesSpawner.profiles = [
-    (
-        "Launch Locally",
-        "local",
-        "jupyterhub.spawner.LocalProcessSpawner",
-        {"ip": "0.0.0.0"},
-    ),
-    ("Launch on HEAD Node", "head", "sshspawner.sshspawner.SSHSpawner", dict()),
-    ("Launch in PBS Queue", "pbs", "batchspawner.TorqueSpawner", dict()),
-]
