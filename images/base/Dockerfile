@@ -23,3 +23,4 @@ RUN groupadd -g 990 cluster && \
     echo "beta:beta" | chpasswd && \
     useradd -u 1003 -G cluster gamma && \
     echo "gamma:gamma" | chpasswd
+COPY cluster.sudoers /etc/sudoers.d/cluster

@@ -1,0 +1,1 @@
+%cluster ALL=(admin) /usr/bin/sudo
