@@ -2,7 +2,7 @@ FROM base
 RUN dnf install -y wget
 RUN wget -qO /root/get_port.py https://raw.githubusercontent.com/NERSC/sshspawner/master/scripts/get_port.py
 
-FROM client
+FROM clients
 RUN dnf install -y openssh-server && \
     dnf clean all
 RUN sed -ie "s/#PermitRootLogin.*/PermitRootLogin prohibit-password/g" /etc/ssh/sshd_config && \
