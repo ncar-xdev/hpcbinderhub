@@ -41,6 +41,8 @@ c.BatchSpawnerBase.req_nprocs = "1"
 c.TorqueSpawner.batch_script = """#!/bin/sh
 #PBS -l walltime={runtime}
 #PBS -l nodes=1
+#PBS -k eo
 #PBS -N jupyter-singleuser
+conda activate
 {cmd}
 """
