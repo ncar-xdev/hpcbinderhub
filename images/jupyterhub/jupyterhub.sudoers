@@ -1,5 +1,1 @@
-Cmnd_Alias JUPYTER_CMD = /opt/jupyter/bin/sudospawner
-Cmnd_Alias QSUB_CMD = /opt/pbs/bin/qsub
-%cluster ALL=(admin) /usr/bin/sudo
-admin ALL=(%cluster) NOPASSWD:JUPYTER_CMD
-admin ALL=(%cluster) NOPASSWD:SETENV:QSUB_CMD
+admin ALL=(%cluster) NOPASSWD:/opt/jupyter/bin/sudospawner
