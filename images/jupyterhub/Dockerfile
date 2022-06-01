@@ -1,4 +1,4 @@
-FROM clients
+FROM userbase
 USER admin
 RUN mkdir -p /opt/jupyter/var/jupyterhub
 COPY --chown=admin:admin jupyterhub_config.py /opt/jupyter/etc/
