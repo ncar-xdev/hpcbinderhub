@@ -1,4 +1,6 @@
-FROM base
+FROM centos:8.4.2105 AS builder
+RUN sed -i 's|mirrorlist|#mirrorlist|g' /etc/yum.repos.d/CentOS-Linux-* && \
+    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
 RUN dnf install -y dnf-plugins-core && \
     dnf config-manager --set-enabled powertools && \
     dnf install -y gcc make rpm-build libtool libtool-ltdl-devel hwloc-devel \
@@ -21,3 +23,6 @@ RUN cd /tmp/openpbs-20.0.1 && \
     cp openpbs-rpmlintrc /root/rpmbuild/SOURCES/ && \
     cd /root/rpmbuild/SPECS && \
     rpmbuild -ba openpbs.spec
+
+FROM centos:8.4.2105
+COPY --from=builder /root/rpmbuild /root/rpmbuild
