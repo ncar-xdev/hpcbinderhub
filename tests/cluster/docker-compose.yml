@@ -9,6 +9,16 @@ volumes:
   gamma-home:
 
 services:
+  pbsserver:
+    image: pbsserver
+    container_name: pbsserver
+    hostname: pbsserver
+    depends_on:
+      - node1
+      - node2
+    networks:
+      - network
+    command: ["node1", "node2"]
   jupyterhub:
     image: jupyterhub
     container_name: jupyterhub
@@ -20,16 +30,10 @@ services:
     ports:
       - 8000:8000
       - 8081:8081
-  pbsserver:
-    image: pbsserver
-    container_name: pbsserver
-    hostname: pbsserver
-    depends_on:
-      - node1
-      - node2
-    networks:
-      - network
-    command: ["node1", "node2"]
+    volumes:
+      - alpha-home:/home/alpha
+      - beta-home:/home/beta
+      - gamma-home:/home/gamma
   head:
     image: head
     container_name: head
@@ -41,7 +45,7 @@ services:
     volumes:
       - alpha-home:/home/alpha
       - beta-home:/home/beta
-      - gamma-home:/home/beta
+      - gamma-home:/home/gamma
   node1:
     image: pbsmom
     container_name: node1
@@ -52,8 +56,8 @@ services:
       - PBS_SERVER=pbsserver
     volumes:
       - alpha-home:/home/alpha
-      - gamma-home:/home/beta
       - beta-home:/home/beta
+      - gamma-home:/home/gamma
   node2:
     image: pbsmom
     container_name: node2
@@ -65,4 +69,4 @@ services:
     volumes:
       - alpha-home:/home/alpha
       - beta-home:/home/beta
-      - gamma-home:/home/beta
+      - gamma-home:/home/gamma
