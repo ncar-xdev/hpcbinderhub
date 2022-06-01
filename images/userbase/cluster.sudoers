@@ -1,2 +1,2 @@
 %cluster ALL=(admin) /usr/bin/sudo
-admin ALL=(%cluster) NOPASSWD:SETENV:/opt/pbs/bin/qsub
+admin ALL=(%cluster) NOPASSWD:SETENV: /opt/pbs/bin/qsub, /opt/pbs/bin/qstat, /opt/pbs/bin/qdel
