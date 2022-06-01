@@ -35,7 +35,7 @@ RUN groupadd -g 990 cluster && \
     echo "beta:beta" | chpasswd && \
     useradd -u 1003 -G cluster gamma && \
     echo "gamma:gamma" | chpasswd
-RUN sed -ie "s|Defaults    secure_path = .*|Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin:/opt/conda/condabin:/opt/conda/bin:/opt/pbs/bin:/opt/pbs/sbin|g" /etc/sudoers
+RUN sed -ie "s|Defaults    secure_path = .*|Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin:/opt/jupyter/condabin:/opt/jupyter/bin:/opt/pbs/bin:/opt/pbs/sbin|g" /etc/sudoers
 COPY cluster.sudoers /etc/sudoers.d/cluster
 RUN cp /opt/jupyter/etc/profile.d/conda.sh /etc/profile.d/
 COPY entrypoint.sh /etc/entrypoint.sh
