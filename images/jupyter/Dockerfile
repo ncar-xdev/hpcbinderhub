@@ -1,4 +1,6 @@
-FROM base as jupyter
+FROM centos:8.4.2105 AS builder
+RUN sed -i 's|mirrorlist|#mirrorlist|g' /etc/yum.repos.d/CentOS-Linux-* && \
+    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
 RUN dnf install -y wget git
 RUN wget -qO /tmp/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
     bash /tmp/miniconda.sh -b -u -p /opt/jupyter
@@ -8,5 +10,5 @@ RUN . /opt/jupyter/etc/profile.d/conda.sh && \
     pip install batchspawner sudospawner wrapspawner git+https://github.com/NERSC/sshspawner && \
     conda clean -y --all
 
-FROM base
-COPY --from=jupyter --chown=admin:admin /opt/jupyter /opt/jupyter
+FROM centos:8.4.2105
+COPY --from=builder /opt/jupyter /opt/jupyter
