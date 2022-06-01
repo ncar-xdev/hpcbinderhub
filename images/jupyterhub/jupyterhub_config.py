@@ -8,6 +8,8 @@ import wrapspawner
 c.JupyterHub.allow_named_servers = True
 c.JupyterHub.data_files_path = "/opt/jupyter/share/jupyterhub"
 c.JupyterHub.spawner_class = "wrapspawner.ProfilesSpawner"
+c.JupyterHub.hub_ip = "0.0.0.0"
+c.JupyterHub.hub_connect_ip = "jupyterhub"
 
 c.Spawner.notebook_dir = "~/"
 
@@ -37,10 +39,10 @@ c.SSHSpawner.path = (
 c.BatchSpawnerBase.req_runtime = "01:00:00"
 c.BatchSpawnerBase.req_nprocs = "1"
 
-# c.TorqueSpawner.batch_submit_cmd = "/opt/pbs/bin/qsub"
-# c.TorqueSpawner.batch_query_cmd = "/opt/pbs/bin/qstat -x {job_id}"
-# c.TorqueSpawner.batch_cancel_cmd = "/opt/pbs/bin/qdel {job_id}"
-c.TorqueSpawner.batch_script = """#!/bin/sh
+c.TorqueSpawner.batch_submit_cmd = "/opt/pbs/bin/qsub -V"
+c.TorqueSpawner.batch_query_cmd = "/opt/pbs/bin/qstat -x {job_id}"
+c.TorqueSpawner.batch_cancel_cmd = "/opt/pbs/bin/qdel {job_id}"
+c.TorqueSpawner.batch_script = """#!/bin/bash -l
 #PBS -l walltime={runtime}
 #PBS -l nodes=1
 #PBS -k eo
