@@ -1,6 +1,6 @@
 networks:
   network:
-    name: cluster-net
+    name: cluster.net
     driver: bridge
 
 volumes:
@@ -14,11 +14,10 @@ services:
     container_name: pbsserver
     hostname: pbsserver
     depends_on:
-      - node1
-      - node2
+      - node
     networks:
       - network
-    command: ["node1", "node2"]
+    command: ["node"]
   jupyterhub:
     image: jupyterhub
     container_name: jupyterhub
@@ -46,22 +45,10 @@ services:
       - alpha-home:/home/alpha
       - beta-home:/home/beta
       - gamma-home:/home/gamma
-  node1:
+  node:
     image: pbsmom
-    container_name: node1
-    hostname: node1
-    networks:
-      - network
-    environment:
-      - PBS_SERVER=pbsserver
-    volumes:
-      - alpha-home:/home/alpha
-      - beta-home:/home/beta
-      - gamma-home:/home/gamma
-  node2:
-    image: pbsmom
-    container_name: node2
-    hostname: node2
+    container_name: node
+    hostname: node
     networks:
       - network
     environment:
