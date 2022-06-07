@@ -9,8 +9,8 @@ c.JupyterHub.allow_named_servers = True
 c.JupyterHub.data_files_path = "/opt/jupyter/share/jupyterhub"
 c.JupyterHub.spawner_class = "wrapspawner.ProfilesSpawner"
 c.JupyterHub.hub_ip = "0.0.0.0"
-c.JupyterHub.hub_connect_ip = "jupyterhub"
-
+c.JupyterHub.hub_connect_ip = "jupyterhub.cluster.net"
+c.ConfigurableHTTPProxy.api_url = "http://jupyterhub.cluster.net:5432"
 c.Spawner.notebook_dir = "~/"
 
 # --------------------------------
@@ -36,17 +36,16 @@ c.SSHSpawner.path = (
 # --------------------------------
 # BatchSpawner
 # --------------------------------
-c.BatchSpawnerBase.req_runtime = "01:00:00"
-c.BatchSpawnerBase.req_nprocs = "1"
-
-c.TorqueSpawner.batch_submit_cmd = "/opt/pbs/bin/qsub -V"
-c.TorqueSpawner.batch_query_cmd = "/opt/pbs/bin/qstat -x {job_id}"
-c.TorqueSpawner.batch_cancel_cmd = "/opt/pbs/bin/qdel {job_id}"
+c.TorqueSpawner.batch_query_cmd = "qstat -fx {job_id}"
+c.TorqueSpawner.state_pending_re = r"job_state = [QH]"
+c.TorqueSpawner.state_running_re = r"job_state = R"
+c.TorqueSpawner.state_exechost_re = r"exec_host = ([\w_-]+)/"
 c.TorqueSpawner.batch_script = """#!/bin/bash -l
-#PBS -l walltime={runtime}
-#PBS -l nodes=1
+#PBS -l walltime=00:05:00
 #PBS -k eo
 #PBS -N jupyter-singleuser
+#PBS -V
+env
 conda activate
 {cmd}
 """
