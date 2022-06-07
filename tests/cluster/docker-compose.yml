@@ -9,15 +9,6 @@ volumes:
   gamma-home:
 
 services:
-  pbsserver:
-    image: pbsserver
-    container_name: pbsserver
-    hostname: pbsserver
-    depends_on:
-      - node
-    networks:
-      - network
-    command: ["node"]
   jupyterhub:
     image: jupyterhub
     container_name: jupyterhub
@@ -45,10 +36,19 @@ services:
       - alpha-home:/home/alpha
       - beta-home:/home/beta
       - gamma-home:/home/gamma
+  pbsserver:
+    image: pbsserver
+    container_name: pbsserver
+    hostname: pbsserver
+    networks:
+      - network
+    command: ["node"]
   node:
     image: pbsmom
     container_name: node
     hostname: node
+    depends_on:
+      - pbsserver
     networks:
       - network
     environment:
