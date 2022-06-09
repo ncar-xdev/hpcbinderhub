@@ -1,24 +1,26 @@
-default: all
+IMAGES := $(subst /,,$(dir $(wildcard */Dockerfile)))
+TARGETS := $(patsubst %,.target-%,$(IMAGES))
 
-all: jupyter pbsrpms userbase jupyterhub pbsmom pbsserver head
+all: $(TARGETS)
 
-jupyter: ./jupyter/Dockerfile
-	docker build --tag jupyter jupyter/
+clean:
+	@rm -rf $(TARGETS)
+	@docker image prune -f
 
-pbsrpms: ./pbsrpms/Dockerfile
-	docker build --tag pbsrpms pbsrpms/
+purge: clean
+	@docker image rm $(IMAGES)
 
-userbase: ./userbase/Dockerfile pbsrpms jupyter
-	docker build --tag userbase userbase/
+$(TARGETS): .target-%: %/Dockerfile
+	@docker build -t $* $*/ && \
+	echo '$* image built' && \
+	touch $@
 
-jupyterhub: ./jupyterhub/Dockerfile userbase
-	docker build --tag jupyterhub jupyterhub/
+define DEPRULE
+.target-$(1): $$(wildcard $(1)/*)
+endef
 
-pbsmom: ./pbsmom/Dockerfile userbase
-	docker build --tag pbsmom pbsmom/
+$(foreach d,$(IMAGES),$(eval $(call DEPRULE,$(d))))
 
-pbsserver: ./pbsserver/Dockerfile pbsrpms
-	docker build --tag pbsserver pbsserver/
-
-head: ./head/Dockerfile userbase
-	docker build --tag head head/
+.target-userbase: .target-jupyter .target-pbsrpms
+.target-pbsserver: .target-pbsrpms
+.target-jupyterhub .target-pbsmom .target-head: .target-userbase
