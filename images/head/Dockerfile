@@ -1,9 +1,3 @@
-FROM centos:8.4.2105 AS getter
-RUN sed -i 's|mirrorlist|#mirrorlist|g' /etc/yum.repos.d/CentOS-Linux-* && \
-    sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
-RUN dnf install -y wget
-RUN wget -qO /root/get_port.py https://raw.githubusercontent.com/NERSC/sshspawner/master/scripts/get_port.py
-
 FROM userbase
 RUN dnf install -y openssh-server && \
     dnf clean all
@@ -14,6 +8,6 @@ RUN echo "TrustedUserCAKeys /etc/ssh/certauth.pub" >> /etc/ssh/sshd_config && \
     echo -e "jupyter" > /etc/ssh/auth_principals/alpha && \
     echo -e "jupyter" > /etc/ssh/auth_principals/beta && \
     echo -e "jupyter" > /etc/ssh/auth_principals/gamma
-COPY --chown=admin:admin --from=getter /root/get_port.py /opt/conda/bin/get_port.py
-COPY --chown=admin:admin --chmod=755 sshspawner-singleuser /opt/conda/bin/sshspawner-singleuser
+COPY --chown=admin:admin get_port.py /opt/jupyter/bin/get_port.py
+COPY --chown=admin:admin --chmod=755 sshspawner-singleuser /opt/jupyter/bin/sshspawner-singleuser
 CMD [ "/usr/sbin/sshd",  "-D" ]

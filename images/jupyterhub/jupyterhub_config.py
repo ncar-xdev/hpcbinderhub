@@ -28,8 +28,9 @@ c.ProfilesSpawner.profiles = [
 # --------------------------------
 c.SSHSpawner.remote_hosts = ["head"]
 c.SSHSpawner.remote_port_command = (
-    "/opt/jupyter/bin/python /opt/jupyter/bin/get_port.py"
+    "/opt/jupyter/bin/python /opt/jupyter/bin/get_port.py --ip"
 )
+c.SSHSpawner.ssh_keyfile = "/etc/ssh/client"
 c.SSHSpawner.path = (
     "/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/pbs/bin:/opt/jupyter/bin"
 )
