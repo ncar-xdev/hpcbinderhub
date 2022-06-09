@@ -11,7 +11,7 @@ purge: clean
 	@docker image rm $(IMAGES)
 
 $(TARGETS): .target-%: %/Dockerfile
-	@docker build -t $* $*/ && \
+	docker build -t $* $*/ && \
 	echo '$* image built' && \
 	touch $@
 

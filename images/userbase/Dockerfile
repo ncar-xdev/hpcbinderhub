@@ -23,6 +23,7 @@ RUN groupadd -g 500 admin && \
     useradd -g 500 -u 500 -G shadow -m admin && \
     chgrp shadow /etc/shadow && \
     chmod 0440 /etc/shadow && \
+    chmod +r /etc/ssh/client* && \
     unlink /var/run/nologin
 COPY --from=jupyter --chown=admin:admin /opt/jupyter /opt/jupyter
 RUN groupadd -g 990 cluster && \
