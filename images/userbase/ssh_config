@@ -1,0 +1,4 @@
+Host *
+  PasswordAuthentication yes
+  IdentityFile /etc/ssh/client
+  StrictHostKeyChecking no

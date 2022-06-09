@@ -8,30 +8,27 @@ COPY --from=rpms /root/rpmbuild/RPMS/x86_64/openpbs-client-20.0.1-0.x86_64.rpm /
 RUN dnf install -y nano sudo openssh-clients python3 \
         /tmp/openpbs-client-20.0.1-0.x86_64.rpm && \
     dnf clean all && \
-    rm -rf /tmp/*
+    rm -rf /tmp/* /root/*
 COPY pbs.conf /etc/pbs.conf
-RUN sed -i "s|# Host|Host|g" /etc/ssh/ssh_config && \
-    sed -i "s|#   StrictHostKeyChecking ask|  StrictHostKeyChecking no|g" /etc/ssh/ssh_config && \
-    sed -i "s|#   IdentityFile ~/.ssh/id_rsa|  IdentityFile ~/.ssh/id_rsa|g" /etc/ssh/ssh_config && \
-    sed -i "s|#   Port 22|  Port 22|g" /etc/ssh/ssh_config && \
-    ssh-keygen -A
+RUN ssh-keygen -A && \
+    mkdir ~/keys && \
+    ssh-keygen -q -t rsa -N '' -f ~/keys/certauth && \
+    ssh-keygen -q -t rsa -N '' -f ~/keys/client && \
+    ssh-keygen -s ~/keys/certauth -I jupyter -n jupyter ~/keys/client.pub && \
+    cp ~/keys/client /etc/ssh/ && \
+    cp ~/keys/client-cert.pub /etc/ssh/
+COPY ssh_config /etc/ssh/ssh_config.d/cluster.conf
 RUN groupadd -g 500 admin && \
     groupadd -g 501 shadow && \
     useradd -g 500 -u 500 -G shadow -m admin && \
     chgrp shadow /etc/shadow && \
     chmod 0440 /etc/shadow && \
     unlink /var/run/nologin
-USER admin
 COPY --from=jupyter --chown=admin:admin /opt/jupyter /opt/jupyter
-RUN mkdir ~/.ssh && \
-    ssh-keygen -q -t rsa -N '' -f ~/.ssh/id_rsa && \
-    ssh-keygen -s ~/.ssh/id_rsa -I admin -n admin ~/.ssh/id_rsa.pub && \
-    cat ~/.ssh/id_rsa.pub > ~/.ssh/authorized_keys
-USER root
 RUN groupadd -g 990 cluster && \
     useradd -u 1001 -G cluster alpha && \
     echo "alpha:alpha" | chpasswd && \
-    useradd -u 1002 -G cluster beta &&  \
+    useradd -u 1002 -G cluster beta && \
     echo "beta:beta" | chpasswd && \
     useradd -u 1003 -G cluster gamma && \
     echo "gamma:gamma" | chpasswd

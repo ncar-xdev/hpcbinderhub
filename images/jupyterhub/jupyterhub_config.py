@@ -5,6 +5,7 @@ import sshspawner
 import sudospawner
 import wrapspawner
 
+c.Application.log_level = 0
 c.JupyterHub.allow_named_servers = True
 c.JupyterHub.data_files_path = "/opt/jupyter/share/jupyterhub"
 c.JupyterHub.spawner_class = "wrapspawner.ProfilesSpawner"
