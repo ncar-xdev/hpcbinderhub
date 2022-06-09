@@ -10,6 +10,8 @@ volumes:
 
 services:
   jupyterhub:
+    build:
+      context: images/jupyterhub/
     image: jupyterhub
     container_name: jupyterhub
     hostname: jupyterhub
@@ -24,7 +26,10 @@ services:
       - alpha-home:/home/alpha
       - beta-home:/home/beta
       - gamma-home:/home/gamma
+
   head:
+    build:
+      context: images/head/
     image: head
     container_name: head
     hostname: head
@@ -36,19 +41,25 @@ services:
       - alpha-home:/home/alpha
       - beta-home:/home/beta
       - gamma-home:/home/gamma
+
   pbsserver:
+    build:
+      context: images/pbsserver/
     image: pbsserver
     container_name: pbsserver
     hostname: pbsserver
     networks:
       - network
     command: ["node"]
+
   node:
+    build:
+      context: images/pbsmom/
+    depends_on:
+      - pbsserver
     image: pbsmom
     container_name: node
     hostname: node
-    depends_on:
-      - pbsserver
     networks:
       - network
     environment:
