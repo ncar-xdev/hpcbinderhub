@@ -7,7 +7,7 @@ RUN wget -qO /tmp/miniconda.sh https://repo.anaconda.com/miniconda/Miniconda3-la
 RUN . /opt/jupyter/etc/profile.d/conda.sh && \
     conda activate && \
     conda install -y -c conda-forge jupyterhub jupyterlab dask_labextension nb_conda_kernels && \
-    pip install batchspawner sudospawner wrapspawner git+https://github.com/NERSC/sshspawner && \
+    pip install batchspawner sudospawner wrapspawner git+https://github.com/ncar-xdev/sshspawner && \
     conda clean -y --all
 
 FROM centos:8.4.2105
