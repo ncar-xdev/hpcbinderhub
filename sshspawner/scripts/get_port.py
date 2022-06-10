@@ -3,7 +3,7 @@ import socket
 
 def port():
     s = socket.socket()
-    s.bind(('', 0))
+    s.bind(("", 0))
     port = s.getsockname()[1]
     s.close()
     return port
