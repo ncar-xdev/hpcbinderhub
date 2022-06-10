@@ -11,6 +11,9 @@ from traitlets import Integer, List, Unicode, observe
 
 class SSHSpawner(Spawner):
 
+    # Override default ip
+    ip = Unicode("0.0.0.0")
+
     # http://traitlets.readthedocs.io/en/stable/migration.html#separation-of-metadata-and-keyword-arguments-in-traittype-contructors
     # config is an unrecognized keyword
 
