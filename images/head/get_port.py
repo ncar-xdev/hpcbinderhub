@@ -1,21 +1,4 @@
-import argparse
 import socket
-
-
-def main():
-    args = parse_arguments()
-    if args.ip:
-        print(f"{ip()} {port()}")
-    else:
-        print(port())
-
-
-def parse_arguments():
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        "--ip", "-i", help="Include IP address in output", action="store_true"
-    )
-    return parser.parse_args()
 
 
 def port():
@@ -35,4 +18,4 @@ def ip(address=("8.8.8.8", 80)):
 
 
 if __name__ == "__main__":
-    main()
+    print(f"{ip()} {port()}")
