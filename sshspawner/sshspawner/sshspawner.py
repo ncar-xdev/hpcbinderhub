@@ -173,9 +173,14 @@ class SSHSpawner(Spawner):
             for index, value in enumerate(cmd):
                 if value == old:
                     cmd[index] = new
+
+        has_port = False
         for index, value in enumerate(cmd):
             if value[0:6] == "--port":
                 cmd[index] = "--port=%d" % (port)
+                has_port = True
+        if not has_port:
+            cmd.append(f"--port={port}")
 
         remote_cmd = " ".join(cmd)
 
