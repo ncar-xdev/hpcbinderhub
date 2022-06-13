@@ -1,5 +1,6 @@
 IMAGES := $(subst /,,$(dir $(wildcard */Dockerfile)))
 TARGETS := $(patsubst %,.target-%,$(IMAGES))
+OPTS :=
 
 all: $(TARGETS)
 
@@ -11,7 +12,7 @@ purge: clean
 	@docker image rm $(IMAGES)
 
 $(TARGETS): .target-%: %/Dockerfile
-	docker build -t $* $*/ && \
+	docker build $(OPTS) -t $* $*/ && \
 	echo '$* image built' && \
 	touch $@
 
