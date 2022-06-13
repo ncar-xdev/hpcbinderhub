@@ -6,13 +6,17 @@ from textwrap import dedent
 
 import asyncssh
 from jupyterhub.spawner import Spawner
-from traitlets import Integer, List, Unicode, observe
+from traitlets import Integer, List, Unicode, default, observe
 
 
 class SSHSpawner(Spawner):
 
     # http://traitlets.readthedocs.io/en/stable/migration.html#separation-of-metadata-and-keyword-arguments-in-traittype-contructors
     # config is an unrecognized keyword
+
+    @default
+    def ssh_default_ip(self):
+        return "0.0.0.0"
 
     remote_hosts = List(
         trait=Unicode(),
@@ -274,9 +278,6 @@ class SSHSpawner(Spawner):
     # FIXME add docstring
     async def exec_notebook(self, command):
         """TBD"""
-
-        # Force the remote ip to detect itself
-        self.ip = "0.0.0.0"
 
         env = super().get_env()
         env["JUPYTERHUB_API_URL"] = self.hub_api_url
