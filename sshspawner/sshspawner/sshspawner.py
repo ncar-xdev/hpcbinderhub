@@ -11,9 +11,6 @@ from traitlets import Integer, List, Unicode, observe
 
 class SSHSpawner(Spawner):
 
-    # Override default ip
-    ip = Unicode("0.0.0.0")
-
     # http://traitlets.readthedocs.io/en/stable/migration.html#separation-of-metadata-and-keyword-arguments-in-traittype-contructors
     # config is an unrecognized keyword
 
@@ -278,6 +275,9 @@ class SSHSpawner(Spawner):
     async def exec_notebook(self, command):
         """TBD"""
 
+        # Force the remote ip to detect itself
+        self.ip = "0.0.0.0"
+
         env = super().get_env()
         env["JUPYTERHUB_API_URL"] = self.hub_api_url
         if self.path:
@@ -292,7 +292,7 @@ class SSHSpawner(Spawner):
         for item in env.items():
             # item is a (key, value) tuple
             # command = ('export %s=%s;' % item) + command
-            bash_script_str += "export %s=%s\n" % item
+            bash_script_str += "export %s='%s'\n" % item
         bash_script_str += "unset XDG_RUNTIME_DIR\n"
 
         bash_script_str += "touch .jupyter.log\n"
