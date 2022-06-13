@@ -6,22 +6,16 @@ from textwrap import dedent
 
 import asyncssh
 from jupyterhub.spawner import Spawner
-from traitlets import Integer, List, Unicode, default, observe
+from traitlets import Integer, List, Unicode, observe
 
 
 class SSHSpawner(Spawner):
 
+    # Change default ip value for SSHSpawners
+    ip = "0.0.0.0"
+
     # http://traitlets.readthedocs.io/en/stable/migration.html#separation-of-metadata-and-keyword-arguments-in-traittype-contructors
     # config is an unrecognized keyword
-
-    ip = Unicode(
-        "0.0.0.0",
-        help="The IP address (or hostname) the single-user server should listen on.",
-    ).tag(config=True)
-
-    @default("ip")
-    def ssh_default_ip(self):
-        return "0.0.0.0"
 
     remote_hosts = List(
         trait=Unicode(),
