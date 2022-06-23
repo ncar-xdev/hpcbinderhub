@@ -1,6 +1,6 @@
 IMAGES := $(subst /,,$(dir $(wildcard */Dockerfile)))
 TARGETS := $(patsubst %,.target-%,$(IMAGES))
-OPTS := --no-cache
+OPTS :=
 
 all: $(TARGETS)
 
