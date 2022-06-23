@@ -25,6 +25,15 @@ services:
       - beta-home:/home/beta
       - gamma-home:/home/gamma
 
+  binderhub:
+    image: binderhub
+    container_name: binderhub
+    hostname: binderhub
+    networks:
+      - network
+    ports:
+      - 8585:8585
+
   head:
     image: head
     container_name: head

@@ -33,4 +33,4 @@ then
     exit 1
 fi
 
-${exe} -f ${cfg}
+${exe} --debug -f ${cfg}
