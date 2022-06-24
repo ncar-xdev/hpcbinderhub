@@ -17,6 +17,8 @@ services:
       - network
     environment:
       - PBS_SERVER=pbsserver
+      - BINDER_API_TOKEN=binder-oauth-client-secret
+      - BINDER_CLIENT_ID=service-oauth-client-binder
     ports:
       - 8000:8000
       - 8081:8081
@@ -33,6 +35,14 @@ services:
       - network
     ports:
       - 8585:8585
+    environment:
+      - JUPYTERHUB_API_TOKEN=binder-oauth-client-secret
+      - JUPYTERHUB_API_URL=http://jupyterhub:8081/hub/api
+      - JUPYTERHUB_CLIENT_ID=service-oauth-client-binder
+      - JUPYTERHUB_SERVICE_PREFIX=/
+      - JUPYTERHUB_SERVICE_URL=http://localhost:8585
+      - JUPYTERHUB_OAUTH_CALLBACK_URL=http://localhost:8585/oauth_callback
+      - JUPYTERHUB_HOST=http://localhost:8000
 
   head:
     image: head
