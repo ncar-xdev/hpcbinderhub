@@ -1,0 +1,64 @@
+networks:
+  network:
+    name: cluster.net
+    driver: bridge
+
+volumes:
+  alpha-home:
+  beta-home:
+  gamma-home:
+
+services:
+  jupyterhub:
+    image: jupyterhub
+    container_name: jupyterhub
+    hostname: jupyterhub
+    networks:
+      - network
+    environment:
+      - PBS_SERVER=pbsserver
+      - BINDER_API_TOKEN=binder-oauth-client-secret
+      - BINDER_CLIENT_ID=service-oauth-client-binder
+    ports:
+      - 8000:8000
+      - 8081:8081
+    volumes:
+      - alpha-home:/home/alpha
+      - beta-home:/home/beta
+      - gamma-home:/home/gamma
+
+  head:
+    image: head
+    container_name: head
+    hostname: head
+    networks:
+      - network
+    environment:
+      - PBS_SERVER=pbsserver
+    volumes:
+      - alpha-home:/home/alpha
+      - beta-home:/home/beta
+      - gamma-home:/home/gamma
+
+  pbsserver:
+    image: pbsserver
+    container_name: pbsserver
+    hostname: pbsserver
+    networks:
+      - network
+    command: ["node"]
+
+  node:
+    depends_on:
+      - pbsserver
+    image: pbsmom
+    container_name: node
+    hostname: node
+    networks:
+      - network
+    environment:
+      - PBS_SERVER=pbsserver
+    volumes:
+      - alpha-home:/home/alpha
+      - beta-home:/home/beta
+      - gamma-home:/home/gamma
