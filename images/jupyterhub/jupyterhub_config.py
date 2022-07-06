@@ -8,7 +8,7 @@ import sudospawner
 import wrapspawner
 
 c.JupyterHub.allow_named_servers = True
-c.JupyterHub.data_files_path = "/opt/jupyter/share/jupyterhub"
+c.JupyterHub.data_files_path = "/opt/conda/share/jupyterhub"
 c.JupyterHub.spawner_class = "wrapspawner.ProfilesSpawner"
 c.JupyterHub.hub_ip = "0.0.0.0"
 c.JupyterHub.hub_connect_ip = "jupyterhub.cluster.net"
@@ -55,13 +55,11 @@ c.ProfilesSpawner.profiles = [
 # SSHSpawner
 # --------------------------------
 c.SSHSpawner.remote_hosts = ["head"]
-c.SSHSpawner.remote_port_command = (
-    "/opt/jupyter/bin/python /opt/jupyter/bin/get_port.py"
-)
+c.SSHSpawner.remote_port_command = "/opt/conda/bin/python /opt/conda/bin/get_port.py"
 c.SSHSpawner.ssh_keyfile = "/etc/ssh/client"
 c.SSHSpawner.hub_api_url = f"http://{c.JupyterHub.hub_connect_ip}:8081/hub/api"
 c.SSHSpawner.path = (
-    "/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/pbs/bin:/opt/jupyter/bin"
+    "/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/pbs/bin:/opt/conda/bin"
 )
 
 # --------------------------------

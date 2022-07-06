@@ -1,1 +1,1 @@
-admin ALL=(%cluster) NOPASSWD:/opt/jupyter/bin/sudospawner
+admin ALL=(%cluster) NOPASSWD:/opt/conda/bin/sudospawner

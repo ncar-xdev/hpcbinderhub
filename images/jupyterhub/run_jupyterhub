@@ -1,13 +1,13 @@
 #!/bin/bash
 
-vol="/opt/jupyter/var/jupyterhub"
-cfg="/opt/jupyter/etc/jupyterhub_config.py"
-exe="/opt/jupyter/bin/jupyterhub"
+vol="/opt/conda/var/jupyterhub"
+cfg="/opt/conda/etc/jupyterhub_config.py"
+exe="/opt/conda/bin/jupyterhub"
 
 echo ":: Sourcing conda environment"
-if [ -f /opt/jupyter/etc/profile.d/conda.sh ]
+if [ -f /opt/conda/etc/profile.d/conda.sh ]
 then
-    . /opt/jupyter/etc/profile.d/conda.sh
+    . /opt/conda/etc/profile.d/conda.sh
     conda activate base
 fi
 

@@ -1,5 +1,5 @@
 FROM pbsrpms AS rpms
-FROM jupyter AS jupyter
+FROM conda AS conda
 
 FROM centos:8.4.2105
 RUN sed -i 's|mirrorlist|#mirrorlist|g' /etc/yum.repos.d/CentOS-Linux-* && \
@@ -34,7 +34,7 @@ RUN groupadd -g 500 admin && \
     chmod 0440 /etc/shadow && \
     chmod +r /etc/ssh/client* && \
     unlink /var/run/nologin
-COPY --from=jupyter --chown=admin:admin /opt/jupyter /opt/jupyter
+COPY --from=conda --chown=admin:admin /opt/conda /opt/conda
 RUN groupadd -g 990 cluster && \
     useradd -u 1001 -G cluster alpha && \
     echo "alpha:alpha" | chpasswd && \
@@ -42,8 +42,8 @@ RUN groupadd -g 990 cluster && \
     echo "beta:beta" | chpasswd && \
     useradd -u 1003 -G cluster gamma && \
     echo "gamma:gamma" | chpasswd
-RUN sed -ie "s|Defaults    secure_path = .*|Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin:/opt/jupyter/condabin:/opt/jupyter/bin:/opt/pbs/bin:/opt/pbs/sbin|g" /etc/sudoers
+RUN sed -ie "s|Defaults    secure_path = .*|Defaults    secure_path = /sbin:/bin:/usr/sbin:/usr/bin:/opt/conda/condabin:/opt/conda/bin:/opt/pbs/bin:/opt/pbs/sbin|g" /etc/sudoers
 COPY cluster.sudoers /etc/sudoers.d/cluster
-RUN cp /opt/jupyter/etc/profile.d/conda.sh /etc/profile.d/
+RUN cp /opt/conda/etc/profile.d/conda.sh /etc/profile.d/
 COPY entrypoint.sh /etc/entrypoint.sh
 ENTRYPOINT [ "/bin/bash", "/etc/entrypoint.sh" ]
