@@ -24,4 +24,4 @@ $(foreach d,$(IMAGES),$(eval $(call DEPRULE,$(d))))
 
 .target-userbase: .target-jupyter .target-pbsrpms
 .target-pbsserver: .target-pbsrpms
-.target-jupyterhub .target-pbsmom .target-head: .target-userbase
+.target-binderhub .target-jupyterhub .target-pbsmom .target-head: .target-userbase

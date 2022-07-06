@@ -1,12 +1,12 @@
 #!/bin/bash
 
-vol="/opt/binder/var/binderhub"
-cfg="/opt/binder/etc/binderhub_config.py"
+vol="/opt/jupyter/var/binderhub"
+cfg="/opt/jupyter/etc/binderhub_config.py"
 
 echo ":: Sourcing conda environment"
-if [ -f /opt/binder/etc/profile.d/conda.sh ]
+if [ -f /opt/jupyter/etc/profile.d/conda.sh ]
 then
-    . /opt/binder/etc/profile.d/conda.sh
+    . /opt/jupyter/etc/profile.d/conda.sh
     conda activate base
 fi
 

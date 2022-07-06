@@ -5,10 +5,19 @@ FROM centos:8.4.2105
 RUN sed -i 's|mirrorlist|#mirrorlist|g' /etc/yum.repos.d/CentOS-Linux-* && \
     sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-Linux-*
 COPY --from=rpms /root/rpmbuild/RPMS/x86_64/openpbs-client-20.0.1-0.x86_64.rpm /tmp/openpbs-client-20.0.1-0.x86_64.rpm
-RUN dnf install -y nano sudo openssh-clients podman python3 \
+RUN dnf install -y git nano sudo openssh-clients podman python3 \
         /tmp/openpbs-client-20.0.1-0.x86_64.rpm && \
     dnf clean all && \
     rm -rf /tmp/* /root/*
+COPY registries.conf /etc/containers/registries.conf
+COPY storage.conf /etc/containers/storage.conf
+RUN echo 'user.max_user_namespaces=127357' > /etc/sysctl.d/01-maxusernamespaces.conf && \
+    echo 'alpha:100000:65536' >> /etc/subuid && \
+    echo 'alpha:100000:65536' >> /etc/subgid && \
+    echo 'beta:100000:65536' >> /etc/subuid && \
+    echo 'beta:100000:65536' >> /etc/subgid && \
+    echo 'gamma:100000:65536' >> /etc/subuid && \
+    echo 'gamma:100000:65536' >> /etc/subgid
 COPY pbs.conf /etc/pbs.conf
 RUN ssh-keygen -A && \
     mkdir ~/keys && \
