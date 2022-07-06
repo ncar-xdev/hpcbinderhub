@@ -79,3 +79,10 @@ services:
       - alpha-home:/home/alpha
       - beta-home:/home/beta
       - gamma-home:/home/gamma
+
+  registry:
+    image: registry:2
+    container_name: registry
+    hostname: registry
+    networks:
+      - network
