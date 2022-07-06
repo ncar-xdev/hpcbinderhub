@@ -84,7 +84,7 @@ services:
       - gamma-home:/home/gamma
 
   registry:
-    image: registry:2
+    image: docker.io/library/registry:2
     container_name: registry
     hostname: registry
     networks:
