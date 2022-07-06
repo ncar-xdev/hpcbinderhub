@@ -2,64 +2,62 @@
 
 The subdirectories contained in this directory define different Docker images
 for use in this project. Each subdirectory contains a `Dockerfile` defining
-how to build the image, and an `entrypoint.sh` file that defines what will be
-done when the image is run.
+how to build the image, as well as any additional files needed for the image
+during build time.
 
-## Base Image
+All images are based on the CentOS 8.4.2105 image.
 
-All images a build on the `base` image, defined in the `base` directory. This
-image, itself, is built on CentOS 8.4.2105. The base image installs `python3`,
-the OpenSSH client utilities, and the OpenPBS client utilities. Thus, all
-images have the ability to SSH into another machine and to submit jobs to the
-PBS queue.
+## Conda Image
 
-In addition to that software, the `base` image also defines a common set to
-non-root users for all images: `alpha` and `beta`. The passwords for these
-two users are `funkya` and `funkyb`, respectively.
+The `conda` image builds and installs [Miniconda](https://docs.conda.io/en/latest/miniconda.html).
+In the base Conda environment, the main Jupyter-based software is installed.
+This software is installed in the `/opt/conda` directory, which is then copied
+into the corresponding directory on each image where Jupyter-based software
+needs to be run.
 
-**ENTRYPOINT:** The default entrypoint to the image configures the PBS client
-tools to point to PBS Server at the hostname set by the environment variable
-`PBS_SERVER`.
+## PBSRPMS Image
 
-## Head Image
-
-The `head` image is designed to be a _head node_ for the cluster. In addition
-to the `base` image contents, the `head` image also installs the OpenSSH
-server, so that users on other nodes can SSH into any head node. (NOTE: Only
-`head` nodes can be entered via SSH!)
-
-**ENTRYPOINT:** The default entrypoint to the image calls the `base` image
-entrypoint and then runs the SSH server.
+The `pbsrpms` image builds the OpenPBS RPMs for installation in the necessary
+PBS images: `userbase`, `pbsmom` and `pbsserver`. The OpenPBS client, MOM, and
+server RPMs are each built for installation in their necessary image.
 
 ## PBS Server Image
 
-The `pbsserver` image has installed the OpenPBS server and configures it to allow
-the default users (see above) to submit jobs to the PBS queue.
+The `pbsserver` image installs the OpenPBS server RPM from the `pbsrpms` image
+and sets up the server to run in the local network.
 
-**ENTRYPOINT:** The default entrypoint to the image configures the PBS Server
-so that the default users can submit jobs to the queue and then starts the
-PBS Server. Unlike the other entrypoints, the PBS Server image's entrypoint
-accepts additional arguments via command line. Each additiional argument to
-the image's entrypoint should be the hostname of a PBS MOM container.
+## User Base Image
+
+The `userbase` image contains all of the client and user-facing software. It copies
+over the `/opt/conda` software from the `conda` image, as well as the OpenPBS Client RPM
+from the `pbsrpms` image, from which the OpenPBS Client is installed. It installs
+the OpenSSH Client, as well. In addition to installing this software, it sets it up
+so that it can be used from within the container. This image also creates and defines
+permissions for all _users_ on the JupyterHub and BinderHub systems.
 
 ## PBS MOM Image
 
-The `pbsmom` image has the OpenPBS MOM process installed, which allows the image's
-corresponding containers to act as PBS execution nodes (i.e., _compute_ nodes).
+This image installs the OpenPBS MOM server RPM for the "compute nodes" from the
+`pbsrpms` image. Since user code is expected to run on the compute nodes, this
+image is built from the `userbase` image. Containers running this image can be
+used to model "compute nodes" on the HPC cluster.
 
-**ENTRYPOINT:** The default entrypoint to the image calls the `base` image
-entrypoint, configures the MOM service to point to the appropriate PBS Server,
-and then runs PBS MOM service.
+## Head Image
+
+The `head` image installs and configures the OpenSSH server so that all users defined
+in the `userbase` image can SSH into the node with their password. Hence, this
+image is built from teh `userbase` image.
 
 ## JupyterHub Image
 
-The `jupyterhub` image has JupyterHub installed on it as well as the appropriate
-Spawners for use with the other images.
+The `jupyterhub` image installs and configures the JupyterHub service to run as
+the `admin` user. This image is built from the `userbase` image.
 
-**ENTRYPOINT:** The default entrypoint to the image calls the `base` image
-entrypoint and then runs the JupyterHub service.
+_NOTE: Since the users defined in the `userbase` image are also installed in this
+image, the JupyterHub authentication is handled with the default PAM Authentication
+method._
 
-**PORTS:** In order to test the JupyterHub service, the ports `8000` and `8081`
-(the JupyterHub API port) are exposed to the host system. Therefore, if these
-ports are mapped from the running container to the same ports on the host, you
-can see the Hub running at `http://localhost:8000/` in your browser.
+## BinderHub Image
+
+The `binderhub` image installs and configures the BinderHub to use the JupyterHub
+service provided by the `jupyterhub` image. It is built from the `userbase` image.
