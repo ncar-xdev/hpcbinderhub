@@ -31,6 +31,7 @@ services:
     image: binderhub
     container_name: binderhub
     hostname: binderhub
+    privileged: true
     networks:
       - network
     ports:
@@ -48,6 +49,7 @@ services:
     image: head
     container_name: head
     hostname: head
+    privileged: true
     networks:
       - network
     environment:
@@ -71,6 +73,7 @@ services:
     image: pbsmom
     container_name: node
     hostname: node
+    privileged: true
     networks:
       - network
     environment:
