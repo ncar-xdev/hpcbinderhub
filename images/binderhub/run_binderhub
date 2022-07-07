@@ -25,4 +25,21 @@ then
     exit 1
 fi
 
+echo ":: Initializing container registry"
+SEARCH=`podman search --list-tags buildpack-deps 2> /dev/null`
+FOUND=1
+if [[ "$?" -eq 0 ]]; then
+    IMAGE_SPEC=`echo $SEARCH | tr '/' ' ' | cut -d' ' -f 4-5`
+    if [[ $IMAGE_SPEC == "buildpack-deps bionic" ]]; then
+        echo "Registry previously initialized."
+        FOUND=0
+    fi
+fi
+if [[ "$FOUND" -eq 1 ]]; then
+    IMAGE_ID=`podman pull docker.io/library/buildpack-deps:bionic`
+    podman push ${IMAGE_ID} registry:5000/buildpack-deps:bionic
+fi
+
+echo "::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::"
+
 python3 -m binderhub --config ${cfg}
