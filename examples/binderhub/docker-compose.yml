@@ -7,12 +7,14 @@ volumes:
   alpha-home:
   beta-home:
   gamma-home:
+  registry-vol:
 
 services:
   jupyterhub:
     image: jupyterhub
     container_name: jupyterhub
     hostname: jupyterhub
+    privileged: true
     networks:
       - network
     environment:
@@ -89,3 +91,5 @@ services:
     hostname: registry
     networks:
       - network
+    volumes:
+      - registry-vol:/var/lib/registry
