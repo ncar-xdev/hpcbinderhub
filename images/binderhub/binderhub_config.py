@@ -2,14 +2,27 @@
 from urllib.parse import urlparse
 
 from binderhub.build_local import LocalRepo2dockerBuild
+from binderhub.registry import DockerRegistry
+
+
+class LocalRepo2podmanBuild(LocalRepo2dockerBuild):
+    def get_r2d_cmd_options(self):
+        """Get options/flags for repo2docker"""
+        r2d_options = super().get_r2d_cmd_options()
+        r2d_options.append("--engine=podman")
+        return r2d_options
+
 
 c.BinderHub.debug = True
 
 c.BinderHub.auth_enabled = True
 c.BinderHub.builder_required = False
-c.BinderHub.build_class = LocalRepo2dockerBuild
+c.BinderHub.build_class = LocalRepo2podmanBuild
 c.BinderHub.push_secret = None
-# c.BinderHub.hub_url = 'http://jupyterhub:8000'
-# c.JupyterHub.hub_ip = 'http://jupyterhub'
+
+c.BinderHub.use_registry = True
+c.BinderHub.image_prefix = "registry/"
+c.BinderHub.registry_class = DockerRegistry
+c.DockerRegistry.url = "http://registry:5000/"
 
 c.BinderHub.about_message = "This is a local deployment without Kubernetes"
