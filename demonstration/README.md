@@ -53,3 +53,28 @@ This demonstration cluster has the following options:
 - _Launch in PBS Queue_: This option lets you launch a single-user JupyterLab
   instance on a "compute node" via PBS. This is done with `BatchSpawner`, which
   can be found [here](https://github.com/jupyterhub/batchspawner).
+
+### The BinderHub
+
+Once you have authenticated with the JupyterHub, you will be presented with the
+same page that you can see on [MyBinder](https://mybinder.org). On this web form,
+you can provide a link to a "Binderized" git repository. Once you enter the
+necessary fields in the form and click the "Launch" button, it will start building
+an image to host your git-hosted notebook using
+[Repo2docker](https://github.com/jupyterhub/repo2docker).
+
+Since Docker is usually not welcome on HPC systems, this demonstration builds the
+image with [Podman](https://podman.io/), instead. Podman is an HPC-friendly
+containerization engine that is compatible with Docker. While Repo2docker is still
+used in this demonstration, it is used with the `--engine=podman` option, which switches
+the Docker operations in Repo2docker to use the
+[Repo2podman](https://github.com/manics/repo2podman) plugin.
+
+When this demonstration is launched, it will also launch a Docker image registry
+running in the same cluster. This image registry will store all built images.
+
+**NOTE: Currently, the BinderHub in this demonstration will build the Podman image
+using Repo2docker/Repo2podman. However, the image is not pushed to the registry.
+Nor is the image launched in the JupyterHub. Ideas for how to implement these steps
+are detailed in the [issues](https://github.com/ncar-xdev/hpcbinderhub/issues) in
+this repository.**
