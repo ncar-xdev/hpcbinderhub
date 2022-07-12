@@ -9,13 +9,13 @@ All images are based on the CentOS 8.4.2105 image.
 
 ```mermaid
 graph TD;
-    A(`conda`) --> B(`userbase`);
-    C(`pbsrpms`) --> B;
-    C --> D(`pbsserver`);
-    B --> E(`head`);
+    E(`head`) <-- B(`userbase`);
     B --> F(`pbsmom`);
     B --> G(`jupyterhub`);
     B --> H(`binderhub`);
+    A(`conda`) --> B;
+    C(`pbsrpms`) --> B;
+    C --> D(`pbsserver`);
 ```
 
 ## Conda Image
