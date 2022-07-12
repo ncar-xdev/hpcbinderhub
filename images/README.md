@@ -8,7 +8,7 @@ during build time.
 All images are based on the CentOS 8.4.2105 image.
 
 ```mermaid
-graph TD;
+graph BT;
     A(`conda`) --> B(`userbase`);
     C(`pbsrpms`) --> B;
     C --> D(`pbsserver`);
