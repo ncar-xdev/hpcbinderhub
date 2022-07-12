@@ -18,7 +18,44 @@ graph BT;
     B --> H(`binderhub`);
 ```
 
-## Conda Image
+## How to Build
+
+To build these images, all you should need is Docker Engine. Optionally,
+if you have `make` on your system, you can build all images with one command:
+
+```bash
+$ make
+```
+
+from within this directory.
+
+If you do not have a system with `make`, but you do have Docker installed on your system,
+you can build each individual image by running:
+
+```bash
+$ docker build --tag IMGNAME IMGNAME
+```
+
+which assumes that each image will be tagged with the same name as the directory corresponding
+to the image.
+
+Due to the dependencies shown in the above dependency graph, I recommend you build
+these images in the following order:
+
+1. `pbsrpms`
+2. `pbsserver`
+3. `conda`
+4. `userbase`
+5. `pbsmom`
+6. `head`
+7. `jupyterhub`
+8. `binderhub`
+
+## Individual Images
+
+Below are the individual images built for this demonstration.
+
+### Conda Image
 
 The `conda` image builds and installs [Miniconda](https://docs.conda.io/en/latest/miniconda.html).
 In the base Conda environment, the main Jupyter-based software is installed, including
@@ -27,7 +64,7 @@ This software is installed in the `/opt/conda` directory, which is then copied
 into the corresponding directory on each image where Jupyter-based software
 needs to be run (i.e., on all `userbase` images).
 
-## PBS RPMS Image
+### PBS RPMS Image
 
 The `pbsrpms` image builds the OpenPBS RPMs for installation in the necessary
 PBS images:
@@ -36,12 +73,12 @@ PBS images:
 - `pbsmom`, where the MOM RPM is installed, and
 - `pbsserver`, wheree the server RPM is installed.
 
-## PBS Server Image
+### PBS Server Image
 
 The `pbsserver` image installs the OpenPBS server RPM from the `pbsrpms` image
 and configures the server to run in the local network.
 
-## User Base Image
+### User Base Image
 
 The `userbase` image contains all of the client and user-facing software. It copies
 over the `/opt/conda` software from the `conda` image, as well as the OpenPBS Client RPM
@@ -51,20 +88,20 @@ all of these services so that they can be used from within the container. This i
 also creates and defines permissions for all _users_ on the JupyterHub and BinderHub
 systems.
 
-## PBS MOM Image
+### PBS MOM Image
 
 This image installs the OpenPBS MOM RPM for the "compute nodes" from the
 `pbsrpms` image. Since user code is expected to run on the compute nodes, this
 image is built from the `userbase` image. Containers running this image can be
 used to model "compute nodes" on the HPC cluster.
 
-## Head Image
+### Head Image
 
 The `head` image installs and configures the OpenSSH server so that all users defined
 in the `userbase` image can SSH into the node with their password. Hence, this
 image is built from the `userbase` image.
 
-## JupyterHub Image
+### JupyterHub Image
 
 The `jupyterhub` image installs and configures the JupyterHub service to run as
 the `admin` user. This image is built from the `userbase` image. It exposes port
@@ -75,7 +112,7 @@ _NOTE: Since the users defined in the `userbase` image are also installed in thi
 image, the JupyterHub authentication is handled with the default PAM Authentication
 method._
 
-## BinderHub Image
+### BinderHub Image
 
 The `binderhub` image installs and configures the BinderHub to use the JupyterHub
 service provided by the `jupyterhub` image. It is built from the `userbase` image.
