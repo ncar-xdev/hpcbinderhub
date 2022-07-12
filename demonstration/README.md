@@ -45,8 +45,11 @@ This demonstration cluster has the following options:
   directly on the same "node" on which the JupyterHub is running. (In this case,
   it launches the JupyterLab process inside the `jupyterhub` container.)
 - _Launch on HEAD Node_: This option lets you launch a single-user JupyterLab
-  instance on the "head" node, or "login" node. This is done with an `SSHSpawner`.
+  instance on the "head node," or "login node." This is done with an `SSHSpawner`.
   The code for which was originally written by folks at NERSC and can be found
   [here](https://github.com/NERSC/sshspawner). To make it work on this demonstration
   cluster, some modifications needed to be made, and so that source code is provided
-  in this repository in the `source` directory.
+  in this repository in the `images/conda/sshspawner` directory.
+- _Launch in PBS Queue_: This option lets you launch a single-user JupyterLab
+  instance on a "compute node" via PBS. This is done with `BatchSpawner`, which
+  can be found [here](https://github.com/jupyterhub/batchspawner).
