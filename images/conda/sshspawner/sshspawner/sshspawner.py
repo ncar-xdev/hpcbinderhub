@@ -56,41 +56,33 @@ class SSHSpawner(Spawner):
     # FIXME Fix help, what happens when not set?
     hub_api_url = Unicode(
         "",
-        help=dedent(
-            """If set, Spawner will configure the containers to use
+        help=dedent("""If set, Spawner will configure the containers to use
             the specified URL to connect the hub api. This is useful when the
             hub_api is bound to listen on all ports or is running inside of a
-            container."""
-        ),
+            container."""),
         config=True,
     )
 
     ssh_keyfile = Unicode(
         "~/.ssh/id_rsa",
-        help=dedent(
-            """Key file used to authenticate hub with remote host.
+        help=dedent("""Key file used to authenticate hub with remote host.
 
             `~` will be expanded to the user's home directory and `{username}`
-            will be expanded to the user's username"""
-        ),
+            will be expanded to the user's username"""),
         config=True,
     )
 
     pid = Integer(
         0,
-        help=dedent(
-            """Process ID of single-user server process spawned for
-            current user."""
-        ),
+        help=dedent("""Process ID of single-user server process spawned for
+            current user."""),
     )
 
     resource_path = Unicode(
         ".jupyterhub-resources",
-        help=dedent(
-            """The base path where all necessary resources are
+        help=dedent("""The base path where all necessary resources are
             placed. Generally left relative so that resources are placed into
-            this base directory in the user's home directory."""
-        ),
+            this base directory in the user's home directory."""),
         config=True,
     )
 
